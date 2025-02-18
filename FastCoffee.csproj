@@ -5,11 +5,11 @@
     <AssemblyName>FastCoffee</AssemblyName>
     <Description>A Peaks of Yore mod which speeds up using coffee</Description>
     <Version>0.1.0</Version>
-    <RootNamespace>FastCoffee</RootNamespace>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
     <Configurations>Debug-BepInEx;Release-BepInEx;Debug-MelonLoader;Release-MelonLoader</Configurations>
     <Configuration Condition="'$(Configuration)' == ''">Debug-BepInEx</Configuration>
     <IntermediateOutputPath>obj/$(Configuration)</IntermediateOutputPath>
-    <OutputPath>bin/plugin/$(Configuration.ToLower())/</OutputPath>
+    <OutputPath>bin/$(Configuration.ToLower())/</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(Configuration.StartsWith('Debug-'))">
