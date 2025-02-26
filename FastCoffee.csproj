@@ -4,7 +4,7 @@
     <Platform>Any CPU</Platform>
     <AssemblyName>FastCoffee</AssemblyName>
     <Description>A Peaks of Yore mod which speeds up using coffee</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <Configurations>Debug-BepInEx;Release-BepInEx;Debug-MelonLoader;Release-MelonLoader</Configurations>
     <Configuration Condition="'$(Configuration)' == ''">Debug-BepInEx</Configuration>

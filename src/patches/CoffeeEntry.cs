@@ -6,6 +6,7 @@ using UnityEngine;
 namespace FastCoffee.Patches {
     [HarmonyPatch(typeof(CoffeeDrink), "SipCoffee")]
     static class CoffeeEntry {
+        private static AudioSource coffeeEffect = null;
         private static PlayerMove playerMove = null;
         private static RoutingFlag routingFlag = null;
         private static TimeAttack timeAttack = null;
@@ -41,6 +42,7 @@ namespace FastCoffee.Patches {
             if (InjectsEnabled() == true) {
                 // Use injected values
                 Injects.Enable();
+                coffeeEffect.Play();
             }
             else {
                 // Use defaults
@@ -64,12 +66,16 @@ namespace FastCoffee.Patches {
         }
 
         public static void OnSceneLoaded() {
+            GameObject coffeeEffectObj = GameObject.Find("CoffeeSound_Coffee_Effect");
+            coffeeEffect = coffeeEffectObj.GetComponent<AudioSource>();
+
             playerMove = GameObject.FindObjectOfType<PlayerMove>();
             routingFlag = GameObject.FindObjectOfType<RoutingFlag>();
             timeAttack = GameObject.FindObjectOfType<TimeAttack>();
         }
 
         public static void OnSceneUnloaded() {
+            coffeeEffect = null;
             playerMove = null;
             routingFlag = null;
             timeAttack = null;
