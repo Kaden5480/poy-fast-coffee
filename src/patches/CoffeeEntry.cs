@@ -42,7 +42,9 @@ namespace FastCoffee.Patches {
             if (InjectsEnabled() == true) {
                 // Use injected values
                 Injects.Enable();
-                coffeeEffect.Play();
+                if (coffeeEffect != null) {
+                    coffeeEffect.Play();
+                }
             }
             else {
                 // Use defaults
@@ -67,6 +69,9 @@ namespace FastCoffee.Patches {
 
         public static void OnSceneLoaded() {
             GameObject coffeeEffectObj = GameObject.Find("CoffeeSound_Coffee_Effect");
+            if (coffeeEffectObj == null) {
+                return;
+            }
             coffeeEffect = coffeeEffectObj.GetComponent<AudioSource>();
 
             playerMove = GameObject.FindObjectOfType<PlayerMove>();
