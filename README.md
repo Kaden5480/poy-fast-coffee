@@ -8,6 +8,7 @@ A
 mod which speeds up using coffee.
 
 # Overview
+- [Features](#features)
 - [Installing](#installing)
     - [BepInEx](#bepinex)
     - [MelonLoader](#melonloader)
@@ -15,6 +16,10 @@ mod which speeds up using coffee.
     - [Dotnet](#dotnet-build)
     - [Visual Studio](#visual-studio-build)
     - [Custom game locations](#custom-game-locations)
+
+# Features
+- Provides instant coffee at the beginning of a level
+- Instant coffee is always provided in routing flag mode
 
 # Installing
 ## BepInEx

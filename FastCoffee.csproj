@@ -24,12 +24,16 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(Configuration.StartsWith('Debug-'))">
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="$(Configuration.EndsWith('-BepInEx'))">
-    <DefineConstants>BEPINEX</DefineConstants>
+    <DefineConstants>$(DefineConstants);BEPINEX</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(Configuration.EndsWith('-MelonLoader'))">
-    <DefineConstants>MELONLOADER</DefineConstants>
+    <DefineConstants>$(DefineConstants);MELONLOADER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="$(Configuration.EndsWith('-BepInEx'))">
