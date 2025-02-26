@@ -7,6 +7,8 @@ A
 [Peaks of Yore](https://store.steampowered.com/app/2236070/)
 mod which speeds up using coffee.
 
+![Fast Coffee Demo](assets/demo.gif)
+
 # Overview
 - [Features](#features)
 - [Installing](#installing)
