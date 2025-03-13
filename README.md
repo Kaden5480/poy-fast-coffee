@@ -12,8 +12,6 @@ mod which speeds up using coffee.
 # Overview
 - [Features](#features)
 - [Installing](#installing)
-    - [BepInEx](#bepinex)
-    - [MelonLoader](#melonloader)
 - [Building from source](#building-from-source)
     - [Dotnet](#dotnet-build)
     - [Visual Studio](#visual-studio-build)
@@ -24,7 +22,6 @@ mod which speeds up using coffee.
 - Instant coffee is always provided in routing flag mode
 
 # Installing
-## BepInEx
 If you haven't installed BepInEx yet, follow the install instructions here:
 - [Windows](https://github.com/Kaden5480/modloader-instructions#bepinex-windows)
 - [Linux](https://github.com/Kaden5480/modloader-instructions#bepinex-linux)
@@ -35,26 +32,13 @@ If you haven't installed BepInEx yet, follow the install instructions here:
 - The compressed zip will contain a `plugins` directory.
 - Copy the files in `plugins` to `BepInEx/plugins` in your game directory.
 
-## MelonLoader
-If you haven't installed MelonLoader yet, follow the install instructions here:
-- [Windows](https://github.com/Kaden5480/modloader-instructions#melonloader-windows)
-- [Linux](https://github.com/Kaden5480/modloader-instructions#melonloader-linux)
-
-### Fast Coffee
-- Download the latest release
-[here](https://github.com/Kaden5480/poy-fast-coffee/releases).
-- The compressed zip file will contain a `Mods` directory.
-- Copy the files from `Mods` to `Mods` in your game directory.
-
 # Building from source
 Whichever approach you use for building from source, the resulting
 plugin/mod can be found in `bin/`.
 
 The following configurations are supported:
-- Debug-BepInEx
-- Release-BepInEx
-- Debug-MelonLoader
-- Release-MelonLoader
+- Debug
+- Release
 
 ## Dotnet build
 To build with dotnet, run the following command, replacing

@@ -6,47 +6,27 @@
     <Description>A Peaks of Yore mod which speeds up using coffee</Description>
     <Version>0.1.2</Version>
     <RootNamespace>$(AssemblyName)</RootNamespace>
-    <Configurations>Debug-BepInEx;Release-BepInEx;Debug-MelonLoader;Release-MelonLoader</Configurations>
-    <Configuration Condition="'$(Configuration)' == ''">Debug-BepInEx</Configuration>
+    <Configurations>Debug;Release</Configurations>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <IntermediateOutputPath>obj/$(Configuration)</IntermediateOutputPath>
     <OutputPath>bin/$(Configuration.ToLower())/</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration.StartsWith('Debug-'))">
+  <PropertyGroup Condition="$(Configuration.Equals('Debug'))">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration.StartsWith('Release-'))">
+  <PropertyGroup Condition="$(Configuration.Equals('Release'))">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration.StartsWith('Debug-'))">
-    <DefineConstants>DEBUG</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(Configuration.EndsWith('-BepInEx'))">
-    <DefineConstants>$(DefineConstants);BEPINEX</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(Configuration.EndsWith('-MelonLoader'))">
-    <DefineConstants>$(DefineConstants);MELONLOADER</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition="$(Configuration.EndsWith('-BepInEx'))">
+  <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
     <PackageReference Include="BepInEx.Core" Version="5.*"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="$(Configuration.EndsWith('-MelonLoader'))">
-    <PackageReference Include="LavaGang.MelonLoader" Version="0.6.6"/>
-    <PackageReference Include="Lib.Harmony" Version="2.3.3"/>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="UnityEngine.Modules" Version="2019.4.36" PrivateAssets="all"/>
   </ItemGroup>
 
@@ -68,6 +48,12 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp.dll">
       <HintPath>$(GameLibPath)/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Rewired_Core.dll">
+      <HintPath>$(GameLibPath)/Rewired_Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime.dll">
+      <HintPath>$(GameLibPath)/Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
 

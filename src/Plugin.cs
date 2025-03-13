@@ -1,85 +1,133 @@
 using System;
 
-using HarmonyLib;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-#if BEPINEX
 using BepInEx;
 using BepInEx.Configuration;
+using UnityEngine.SceneManagement;
 
 namespace FastCoffee {
     [BepInPlugin("com.github.Kaden5480.poy-fast-coffee", "FastCoffee", PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin {
-        public void Awake() {
-            Harmony.CreateAndPatchAll(typeof(Patches.CoffeeEntry));
-            Harmony.CreateAndPatchAll(typeof(Patches.CanInstantCoffee));
-            Harmony.CreateAndPatchAll(typeof(Patches.CoffeeDuration));
-            Harmony.CreateAndPatchAll(typeof(Patches.HideArmsDuration));
+        // An instance of Plugin accessible statically
+        public static Plugin instance = null;
 
+        // The cache
+        public Cache cache { get; } = new Cache();
+
+        // The rewritten coffee logic
+        public Coffee coffee { get; } = new Coffee();
+
+        // Applies harmony patches
+        private Patcher patcher { get; } = new Patcher();
+
+        /**
+         * <summary>
+         * Executes when the plugin is being loaded.
+         * </summary>
+         */
+        private void Awake() {
+            instance = this;
+
+            // Apply early patches
+            patcher.PatchEarly();
+
+            // Track scene state changes
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
-
-            CommonAwake();
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-            CommonSceneLoad();
+        /**
+         * <summary>
+         * Executes when this plugin is being destroyed.
+         * </summary>
+         */
+        private void OnDestroy() {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
 
-        private void OnSceneUnloaded(Scene scene) {
-            CommonSceneUnload();
-        }
-
-#elif MELONLOADER
-using MelonLoader;
-using MelonLoader.Utils;
-
-[assembly: MelonInfo(typeof(FastCoffee.Plugin), "FastCoffee", PluginInfo.PLUGIN_VERSION, "Kaden5480")]
-[assembly: MelonGame("TraipseWare", "Peaks of Yore")]
-
-namespace FastCoffee {
-    public class Plugin: MelonMod {
-        public override void OnInitializeMelon() {
-            CommonAwake();
-        }
-
-        public override void OnSceneWasLoaded(int buildIndex, string sceneName) {
-            CommonSceneLoad();
-        }
-
-        public override void OnSceneWasUnloaded(int buildIndex, string sceneName) {
-            CommonSceneUnload();
-        }
-
-#endif
-
-        public static Plugin plugin;
-
-        public static void LogDebug(string message) {
-#if DEBUG
-            if (plugin == null) {
-                Console.WriteLine($"FastCoffee: {message}");
+        /**
+         * <summary>
+         * Executes each frame.
+         * </summary>
+         */
+        private void Update() {
+            if (cache.player == null) {
                 return;
             }
-    #if BEPINEX
-            plugin.Logger.LogDebug(message);
-    #elif MELONLOADER
-            plugin.MelonLogger.Msg(message);
-    #endif
+
+            if (cache.player.GetButtonDown("Coffee") == true) {
+                coffee.Toggle();
+            }
+        }
+
+        /**
+         * <summary>
+         * Executes whenever a scene loads.
+         * </summary>
+         */
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+            cache.FindObjects();
+        }
+
+        /**
+         * <summary>
+         * Executes whenever a scene unloads.
+         * </summary>
+         */
+        private void OnSceneUnloaded(Scene scene) {
+            coffee.Stop();
+            cache.Clear();
+        }
+
+        /**
+         * <summary>
+         * Logs a debug message.
+         * </summary>
+         * <param name="message">The message to log</param>
+         */
+        public static void LogDebug(string message) {
+#if DEBUG
+            if (instance == null) {
+                Console.WriteLine($"[Debug] FastCoffee: {message}");
+                return;
+            }
+
+            instance.Logger.LogInfo(message);
+#else
+            if (instance != null) {
+                instance.Logger.LogDebug(message);
+            }
 #endif
         }
 
-        private void CommonAwake() {
-            plugin = this;
+        /**
+         * <summary>
+         * Logs an informational message.
+         * </summary>
+         * <param name="message">The message to log</param>
+         */
+        public static void LogInfo(string message) {
+            if (instance == null) {
+                Console.WriteLine($"[Info] FastCoffee: {message}");
+                return;
+            }
+
+            instance.Logger.LogInfo(message);
         }
 
-        private void CommonSceneLoad() {
-            Patches.CoffeeEntry.OnSceneLoaded();
-        }
+        /**
+         * <summary>
+         * Logs an error message.
+         * </summary>
+         * <param name="message">The message to log</param>
+         */
+        public static void LogError(string message) {
+            if (instance == null) {
+                Console.WriteLine($"[Error] FastCoffee: {message}");
+                return;
+            }
 
-        private void CommonSceneUnload() {
-            Patches.CoffeeEntry.OnSceneUnloaded();
+            instance.Logger.LogError(message);
         }
     }
 }
