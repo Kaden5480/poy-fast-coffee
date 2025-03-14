@@ -18,8 +18,9 @@ mod which speeds up using coffee.
     - [Custom game locations](#custom-game-locations)
 
 # Features
-- Provides instant coffee at the beginning of a level
-- Instant coffee is always provided in routing flag mode
+- Provides instant coffee at the beginning of a level.
+- Instant coffee is always provided in routing flag mode.
+- Integrates with [Fast Reset](https://github.com/Kaden5480/poy-fast-reset/) to provide coffee when resetting.
 
 # Installing
 If you haven't installed BepInEx yet, follow the install instructions here:
