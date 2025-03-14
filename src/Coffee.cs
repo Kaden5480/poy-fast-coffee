@@ -15,6 +15,9 @@ namespace FastCoffee {
             get => Plugin.instance.cache;
         }
 
+        // Support accessing statically
+        private static Coffee instance = null;
+
         // Whether fast coffee is running
         public bool isRunning {
             get => coffeeCoroutine != null
@@ -37,7 +40,6 @@ namespace FastCoffee {
         private const float ripplesMin = 0f;
         private const float tiltShiftMin = 0f;
         private const float vignetteMin = 0.362f;
-        //private const float vignetteMin = 0f;
 
         // Maximum values
         private const float doubleVisionMax = 0.368f;
@@ -48,11 +50,21 @@ namespace FastCoffee {
 
         /**
          * <summary>
+         * Constructs an instance of Coffee.
+         * </summary>
+         */
+        public Coffee() {
+            instance = this;
+        }
+
+        /**
+         * <summary>
          * Whether fast coffee can be used.
          * </summary>
+         * <param name="force">Whether to use more lenient checks</param>
          * <returns>True if it can be used, false otherwise</returns>
          */
-        public bool CanUse() {
+        public bool CanUse(bool force = false) {
             // Disable in yfyd/fs mode
             if (GameManager.control.permaDeathEnabled == true
                 || GameManager.control.freesoloEnabled == true
@@ -88,6 +100,12 @@ namespace FastCoffee {
             // Always available in routing flag mode
             if (cache.routingFlag.currentlyUsingFlag == true) {
                 LogDebug("Can always use in routing flag mode");
+                return true;
+            }
+
+            // If forcefully applying, skip other checks
+            if (force == true) {
+                LogDebug("Forcefully applying coffee, bypassing grounded checks");
                 return true;
             }
 
@@ -185,11 +203,11 @@ namespace FastCoffee {
             // Fade the visual out
             LogDebug("ApplyVisual: Fading out visual");
 
-            float endTime = 0f;
-            while (endTime < visualFadeDuration) {
+            time = 0f;
+            while (time < visualFadeDuration) {
                 float delta = Time.deltaTime;
                 MoveTowards(false, delta);
-                endTime += delta;
+                time += delta;
                 yield return null;
             }
             cache.coffee.volume.enabled = false;
@@ -247,10 +265,12 @@ namespace FastCoffee {
          * <summary>
          * Attempts to trigger fast coffee.
          * </summary>
+         * <param name="force">Whether to more forcefully apply coffee</param>
+         * <returns>True if coffee was reapplied, false otherwise</returns>
          */
-        private void Start() {
-            if (CanUse() == false) {
-                return;
+        private bool Start(bool force = false) {
+            if (CanUse(force) == false) {
+                return false;
             }
 
             // Make sound effects
@@ -290,6 +310,8 @@ namespace FastCoffee {
             visualCoroutine = Plugin.instance
                 .StartCoroutine(ApplyVisual());
             LogDebug("Started visual coroutine");
+
+            return true;
         }
 
         /**
@@ -335,6 +357,29 @@ namespace FastCoffee {
             }
             else {
                 Start();
+            }
+        }
+
+        /**
+         * <summary>
+         * Reapplies coffee.
+         * This is used for integration with Fast Reset.
+         * </summary>
+         */
+        public static void Reapply() {
+            if (instance == null) {
+                Plugin.LogDebug("[FastCoffee.Coffee]: No instance found, not reapplying coffee");
+                return;
+            }
+
+            instance.Stop();
+
+            // Need to apply more forcefully to bypass grounded checks
+            if (instance.Start(true) == true) {
+                instance.LogDebug("Reapplied coffee");
+            }
+            else {
+                instance.LogDebug("Failed to reapply coffee");
             }
         }
     }
