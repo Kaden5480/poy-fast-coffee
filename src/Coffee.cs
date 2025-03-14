@@ -247,6 +247,7 @@ namespace FastCoffee {
             cache.coffee.coffeeDrinkAnimation.Stop();
             cache.coffeeBottle.SetActive(false);
 
+            // Fix the position and rotation of the coffee
             GameObject animationObj = cache.coffee.coffeeDrinkAnimation.gameObject;
             animationObj.transform.localPosition = cache.coffeeDrinkPosition;
             animationObj.transform.localRotation = cache.coffeeDrinkRotation;
@@ -264,6 +265,31 @@ namespace FastCoffee {
             cache.coffee.volume.enabled = false;
 
             LogDebug("Reset coffee state");
+        }
+
+        /**
+         * <summary>
+         * Shows the coffee left tooltip only when necessary
+         * </summary>
+         */
+        private void ShowCoffeeLeft() {
+            // If other tooltips running, don't show
+            if (ChalkBag.runningChalkTooltip == true
+                || RopeAnchor.ropesleftTooltip == true
+            ) {
+                LogDebug("Not showing coffee left, chalk/rope tooltip is running");
+                return;
+            }
+
+            // If HUD disabled, don't show
+            if (PlayerPrefs.HasKey("HUDSetting") == true
+                && PlayerPrefs.GetInt("HUDSetting") != 1
+            ) {
+                LogDebug("Not showing coffee left, HUD is disabled");
+                return;
+            }
+
+            cache.coffee.StartCoroutine("CoffeeLeftToolTip");
         }
 
         /**
@@ -289,8 +315,8 @@ namespace FastCoffee {
             if (GameManager.control.allArtefactsUnlocked == false) {
                 int oldSips = cache.coffee.coffeeSipsLeft;
 
+                ShowCoffeeLeft();
                 cache.coffee.coffeeSipsLeft--;
-                cache.coffee.StartCoroutine("CoffeeLeftTooltip");
 
                 LogDebug(
                     "Infinite coffee not unlocked, reduced sips left"
