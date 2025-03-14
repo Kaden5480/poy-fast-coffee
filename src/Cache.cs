@@ -1,6 +1,7 @@
 using Rewired;
 using SCPE;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 
 namespace FastCoffee {
@@ -11,6 +12,8 @@ namespace FastCoffee {
      * </summary>
      */
     public class Cache : Loggable {
+        public Scene scene;
+
         public CoffeeDrink coffee = null;
         public GameObject coffeeBottle = null;
         public Vector3 coffeeDrinkPosition = Vector3.zero;
@@ -66,6 +69,8 @@ namespace FastCoffee {
          * </summary>
          */
         public void FindObjects() {
+            scene = SceneManager.GetActiveScene();
+
             GameObject coffeeAudioObj = GameObject.Find("CoffeeSound_Coffee_Effect");
             if (coffeeAudioObj != null) {
                 coffeeEffectAudio = coffeeAudioObj.GetComponent<AudioSource>();

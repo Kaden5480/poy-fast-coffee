@@ -65,6 +65,15 @@ namespace FastCoffee {
          * <returns>True if it can be used, false otherwise</returns>
          */
         public bool CanUse(bool force = false) {
+            // Disable in cabins
+            if (cache.scene.buildIndex == 1
+                || cache.scene.buildIndex == 37
+                || cache.scene.buildIndex == 67
+            ) {
+                LogDebug("Can't use in a cabin");
+                return false;
+            }
+
             // Disable in yfyd/fs mode
             if (GameManager.control.permaDeathEnabled == true
                 || GameManager.control.freesoloEnabled == true
