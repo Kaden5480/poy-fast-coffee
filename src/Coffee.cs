@@ -245,6 +245,11 @@ namespace FastCoffee {
 
             // Stop the animation
             cache.coffee.coffeeDrinkAnimation.Stop();
+            cache.coffeeBottle.SetActive(false);
+
+            GameObject animationObj = cache.coffee.coffeeDrinkAnimation.gameObject;
+            animationObj.transform.localPosition = cache.coffeeDrinkPosition;
+            animationObj.transform.localRotation = cache.coffeeDrinkRotation;
 
             // Clear the UI
             cache.coffeeUsesLeftCG.alpha = 0f;

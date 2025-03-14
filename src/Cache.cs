@@ -12,6 +12,9 @@ namespace FastCoffee {
      */
     public class Cache : Loggable {
         public CoffeeDrink coffee = null;
+        public GameObject coffeeBottle = null;
+        public Vector3 coffeeDrinkPosition = Vector3.zero;
+        public Quaternion coffeeDrinkRotation = Quaternion.identity;
         public Inventory inventory = null;
         public PlayerMove playerMove = null;
         public RoutingFlag routingFlag = null;
@@ -73,6 +76,18 @@ namespace FastCoffee {
                 player = Patcher.GetField<CoffeeDrink, Player>(
                     coffee, "player"
                 );
+
+                GameObject animationObj = coffee.coffeeDrinkAnimation.gameObject;
+
+                Transform coffeeBottleTransform = animationObj
+                    .transform.Find("coffeebottle");
+
+                if (coffeeBottleTransform != null) {
+                    coffeeBottle = coffeeBottleTransform.gameObject;
+                }
+
+                coffeeDrinkPosition = animationObj.transform.localPosition;
+                coffeeDrinkRotation = animationObj.transform.localRotation;
             }
 
             inventory = GameObject.FindObjectOfType<Inventory>();
@@ -92,6 +107,7 @@ namespace FastCoffee {
          */
         public bool IsComplete() {
             return coffee != null
+                && coffeeBottle != null
                 && coffeeEffectAudio != null
                 && inventory != null
                 && player != null
@@ -107,6 +123,9 @@ namespace FastCoffee {
          */
         public void Clear() {
             coffee = null;
+            coffeeBottle = null;
+            coffeeDrinkPosition = Vector3.zero;
+            coffeeDrinkRotation = Quaternion.identity;
             inventory = null;
             player = null;
             playerMove = null;
