@@ -306,15 +306,19 @@ namespace FastCoffee {
          * Attempts to trigger fast coffee.
          * </summary>
          * <param name="force">Whether to more forcefully apply coffee</param>
+         * <param name="slurp">Whether to make the slurp sound effect</param>
          * <returns>True if coffee was reapplied, false otherwise</returns>
          */
-        private bool Start(bool force = false) {
+        private bool Start(bool force = false, bool slurp = true) {
             if (CanUse(force) == false) {
                 return false;
             }
 
             // Make sound effects
-            cache.coffee.slurpSound.SingleSound();
+            if (slurp == true) {
+                cache.coffee.slurpSound.SingleSound();
+            }
+
             cache.coffeeEffectAudio.Play();
 
             // Reset the state of coffee
@@ -405,8 +409,9 @@ namespace FastCoffee {
          * Reapplies coffee.
          * This is used for integration with Fast Reset.
          * </summary>
+         * <param name="slurp">Whether to make the slurp sound when reapplying coffee</param>
          */
-        public static void Reapply() {
+        public static void Reapply(bool slurp) {
             if (instance == null) {
                 Plugin.LogDebug("[FastCoffee.Coffee]: No instance found, not reapplying coffee");
                 return;
@@ -415,7 +420,7 @@ namespace FastCoffee {
             instance.Stop();
 
             // Need to apply more forcefully to bypass grounded checks
-            if (instance.Start(true) == true) {
+            if (instance.Start(true, slurp) == true) {
                 instance.LogDebug("Reapplied coffee");
             }
             else {
