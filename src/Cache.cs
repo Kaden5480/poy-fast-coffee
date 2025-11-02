@@ -19,6 +19,7 @@ namespace FastCoffee {
         public Vector3 coffeeDrinkPosition = Vector3.zero;
         public Quaternion coffeeDrinkRotation = Quaternion.identity;
         public Inventory inventory = null;
+        public LevelEditorManager levelEditorManager = null;
         public PlayerMove playerMove = null;
         public RoutingFlag routingFlag = null;
         public TimeAttack timeAttack = null;
@@ -96,6 +97,7 @@ namespace FastCoffee {
             }
 
             inventory = GameObject.FindObjectOfType<Inventory>();
+            levelEditorManager = GameObject.FindObjectOfType<LevelEditorManager>();
             playerMove = GameObject.FindObjectOfType<PlayerMove>();
             routingFlag = GameObject.FindObjectOfType<RoutingFlag>();
             timeAttack = GameObject.FindObjectOfType<TimeAttack>();
@@ -132,6 +134,7 @@ namespace FastCoffee {
             coffeeDrinkPosition = Vector3.zero;
             coffeeDrinkRotation = Quaternion.identity;
             inventory = null;
+            levelEditorManager = null;
             player = null;
             playerMove = null;
             routingFlag = null;

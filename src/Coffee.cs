@@ -59,6 +59,34 @@ namespace FastCoffee {
 
         /**
          * <summary>
+         * Whether fast coffee can be used in this
+         * custom level.
+         * </summary>
+         * <returns>Whether fast coffee can be used in this custom level</returns>
+         */
+        public bool CanUseCustom() {
+            if (cache.levelEditorManager.orbitCamActive == true) {
+                LogDebug("Can't use when orbit camera is active");
+                return false;
+            }
+
+            if (cache.levelEditorManager.toolManager.coffee == false) {
+                LogDebug("Can't use, coffee isn't permitted in custom level");
+                return false;
+            }
+
+            if (cache.levelEditorManager.toolManager.coffee_infinite == false
+                && cache.coffee.coffeeSipsLeft < 1
+            ) {
+                LogDebug("Can't use, limited coffee in custom level and no sips left");
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * <summary>
          * Whether fast coffee can be used.
          * </summary>
          * <param name="force">Whether to use more lenient checks</param>
@@ -69,6 +97,7 @@ namespace FastCoffee {
             if (cache.scene.buildIndex == 1
                 || cache.scene.buildIndex == 37
                 || cache.scene.buildIndex == 67
+                || cache.scene.buildIndex == 68
             ) {
                 LogDebug("Can't use in a cabin");
                 return false;
@@ -82,9 +111,9 @@ namespace FastCoffee {
                 return false;
             }
 
-            // Can't use if coffee isn't unlocked
-            if (GameManager.control.coffee == false) {
-                LogDebug("Can't use, coffee hasn't been unlocked yet");
+            // Validate cache
+            if (cache.IsComplete() == false) {
+                LogDebug("Can't use, cache is incomplete");
                 return false;
             }
 
@@ -94,16 +123,25 @@ namespace FastCoffee {
                 return false;
             }
 
-            // Validate cache
-            if (cache.IsComplete() == false) {
-                LogDebug("Can't use, cache is incomplete");
-                return false;
+            // Handle custom levels
+            if (cache.levelEditorManager != null) {
+                if (CanUseCustom() == false) {
+                    return false;
+                }
             }
+            // Otherwise, handle normal
+            else {
+                // Can't use if coffee isn't unlocked
+                if (GameManager.control.coffee == false) {
+                    LogDebug("Can't use, coffee hasn't been unlocked yet");
+                    return false;
+                }
 
-            // You need to have coffee available
-            if (cache.coffee.coffeeSipsLeft < 1) {
-                LogDebug("Can't use, no coffee left");
-                return false;
+                // You need to have coffee available
+                if (cache.coffee.coffeeSipsLeft < 1) {
+                    LogDebug("Can't use, no coffee left");
+                    return false;
+                }
             }
 
             // Always available in routing flag mode
@@ -278,6 +316,29 @@ namespace FastCoffee {
 
         /**
          * <summary>
+         * Determines whether the coffee left HUD should be shown.
+         * </summary>
+         * <returns>Whether the HUD should be shown</returns>
+         */
+        private bool ShouldShowCoffeeLeft() {
+            // Custom levels
+            if (cache.levelEditorManager != null) {
+                if (cache.levelEditorManager.toolManager.coffee_infinite == false) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (GameManager.control.allArtefactsUnlocked == false) {
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * <summary>
          * Shows the coffee left tooltip only when necessary
          * </summary>
          */
@@ -325,9 +386,8 @@ namespace FastCoffee {
             ResetCoffeeState();
 
             // Update coffee counts and display UI where appropriate
-            if (GameManager.control.allArtefactsUnlocked == false) {
+            if (ShouldShowCoffeeLeft() == true) {
                 int oldSips = cache.coffee.coffeeSipsLeft;
-
                 ShowCoffeeLeft();
                 cache.coffee.coffeeSipsLeft--;
 
